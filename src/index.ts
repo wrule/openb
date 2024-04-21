@@ -30,6 +30,10 @@ function openBrowser(
   browserPath?: string,
   args?: string,
 ) {
+  if (!userDataDir) {
+    console.error('userDataDir is empty');
+    process.exit(0);
+  }
   const realUserDataDir = getUserDataDir(userDataDir);
   const userConfig = loadConfig(path.resolve(realUserDataDir, 'config.json'));
   const params: Config = {
@@ -42,11 +46,11 @@ function openBrowser(
   console.log(params);
   if (!params.browserPath) {
     console.error('browserPath is empty');
-    process.exit(1);
+    process.exit(0);
   }
   if (!params.userDataDir) {
     console.error('userDataDir is empty');
-    process.exit(1);
+    process.exit(0);
   }
   return exec(`"${
     params.browserPath
@@ -59,7 +63,7 @@ function openBrowser(
 
 function main() {
   const args = process.argv.slice(2);
-  console.log(args);
+  console.log('args', args);
   openBrowser(args[0], args[1], args[2]);
 }
 
