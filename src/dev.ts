@@ -1,7 +1,4 @@
-import { hello } from '.';
-
 import os from 'os';
-import fs from 'fs';
 import path from 'path';
 import { exec } from 'child_process';
 
@@ -14,7 +11,7 @@ interface Config {
 function loadConfig(configPath: string): Config {
   try {
     return require(configPath);
-  } catch (error) { console.error(error); }
+  } catch (error) { }
   return { };
 }
 
@@ -40,8 +37,15 @@ function openBrowser(
   };
   params.userDataDir = realUserDataDir;
   if (!params.args) params.args = '--flag-switches-begin --flag-switches-end';
-  if (!params.browserPath) throw 'browserPath';
-  if (!params.userDataDir) throw 'userDataDir';
+  console.log(params);
+  if (!params.browserPath) {
+    console.error('browserPath is empty');
+    process.exit(1);
+  }
+  if (!params.userDataDir) {
+    console.error('userDataDir is empty');
+    process.exit(1);
+  }
   return exec(`"${
     params.browserPath
   }" ${
@@ -52,13 +56,7 @@ function openBrowser(
 }
 
 function dev() {
-
-  console.log(getUserDataDir('234'));
-
-  // getConfig();
-  // console.log(path.join(os.homedir(), '.cbmgr/'));
-  // const chrome = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-  // openBrowser(chrome, '~/Desktop/1');
+  openBrowser('u1');
 }
 
 dev();
