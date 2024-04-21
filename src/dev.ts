@@ -5,26 +5,55 @@ import fs from 'fs';
 import path from 'path';
 import { exec } from 'child_process';
 
-function getConfig(filePath: string) {
+interface Config {
+  browserPath?: string;
+  args?: string;
+  userDataDir?: string;
+}
+
+function loadConfig(configPath: string): Config {
   try {
-    return require(filePath);
-  } catch (error) {
-    console.error(`cannot load ${filePath}`);
-  }
+    return require(configPath);
+  } catch (error) { console.error(error); }
   return { };
+}
+
+const gloablConfig = loadConfig(path.resolve(os.homedir(), '.cbmgr/config.json'));
+
+function getUserDataDir(text: string) {
+  if (text === path.basename(text) && gloablConfig.userDataDir)
+    return path.resolve(gloablConfig.userDataDir, text);
+  return path.resolve(text);
 }
 
 function openBrowser(
   userDataDir: string,
-  browserPath = '',
-  args = '--flag-switches-begin --flag-switches-end',
+  browserPath?: string,
+  args?: string,
 ) {
-  const config = getConfig(path.join(os.homedir(), '.cbmgr/config.json'));
-  return exec(`"${browserPath || config.browserPath}" ${args} --user-data-dir="${userDataDir}"`);
+  const realUserDataDir = getUserDataDir(userDataDir);
+  const userConfig = loadConfig(path.resolve(realUserDataDir, 'config.json'));
+  const params: Config = {
+    ...gloablConfig,
+    ...userConfig,
+    userDataDir: realUserDataDir,
+  };
+  if (!params.browserPath) throw 'browserPath';
+  if (!params.userDataDir) throw 'userDataDir';
+  return exec(`"${
+    params.browserPath
+  }" ${
+    params.args ?? ''
+  } --user-data-dir="${
+    params.userDataDir
+  }"`);
 }
 
 function dev() {
-  getConfig();
+
+  console.log(getUserDataDir('234'));
+
+  // getConfig();
   // console.log(path.join(os.homedir(), '.cbmgr/'));
   // const chrome = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
   // openBrowser(chrome, '~/Desktop/1');
