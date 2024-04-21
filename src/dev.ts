@@ -11,15 +11,17 @@ interface Config {
 function loadConfig(configPath: string): Config {
   try {
     return require(configPath);
-  } catch (error) { }
+  } catch (error) {
+    console.warn(`it is recommended to configure ${configPath}`);
+  }
   return { };
 }
 
-const gloablConfig = loadConfig(path.resolve(os.homedir(), '.cbmgr/config.json'));
+const globalConfig = loadConfig(path.resolve(os.homedir(), '.cbmgr/config.json'));
 
 function getUserDataDir(text: string) {
-  if (text === path.basename(text) && gloablConfig.userDataDir)
-    return path.resolve(gloablConfig.userDataDir, text);
+  if (text === path.basename(text) && globalConfig.userDataDir)
+    return path.resolve(globalConfig.userDataDir, text);
   return path.resolve(text);
 }
 
@@ -31,7 +33,7 @@ function openBrowser(
   const realUserDataDir = getUserDataDir(userDataDir);
   const userConfig = loadConfig(path.resolve(realUserDataDir, 'config.json'));
   const params: Config = {
-    ...gloablConfig,
+    ...globalConfig,
     ...userConfig,
     ...JSON.parse(JSON.stringify({ browserPath, args })),
   };
