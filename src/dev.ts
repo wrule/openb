@@ -36,8 +36,10 @@ function openBrowser(
   const params: Config = {
     ...gloablConfig,
     ...userConfig,
-    userDataDir: realUserDataDir,
+    ...JSON.parse(JSON.stringify({ browserPath, args })),
   };
+  params.userDataDir = realUserDataDir;
+  if (!params.args) params.args = '--flag-switches-begin --flag-switches-end';
   if (!params.browserPath) throw 'browserPath';
   if (!params.userDataDir) throw 'userDataDir';
   return exec(`"${
