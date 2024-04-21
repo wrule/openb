@@ -7,7 +7,7 @@
     "pack": "script/pack.sh",
     "clean": "rm -rf dist",
     "watch": "tsc --watch",
-    "dev": "node dist/dev.js",
+    "dev": "node dist/index.js",
     "new": "ts-node script/new.ts",
     "patch": "script/patch.sh"
   },

@@ -58,7 +58,9 @@ function openBrowser(
 }
 
 function main() {
-  openBrowser('u1');
+  const args = process.argv.slice(2);
+  console.log(args);
+  openBrowser(args[0], args[1], args[2]);
 }
 
 main();
