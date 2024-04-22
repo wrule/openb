@@ -2,6 +2,9 @@
   "name": "cbmgr",
   "version": "0.1.0",
   "main": "dist/index.js",
+  "bin": {
+    "openb": "dist/index.js"
+  },
   "scripts": {
     "build": "tsc",
     "pack": "script/pack.sh",
