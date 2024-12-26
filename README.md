@@ -19,6 +19,6 @@ npm install cbmgr -g
 
 ## Try on terminal
 ```shell
-open my-first-browser
+openb my-first-browser
 ```
 And you can find the **"my-first-browser"** folder created in **userDataDir**
